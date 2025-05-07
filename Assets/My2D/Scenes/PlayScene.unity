@@ -733,7 +733,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225c205bbd13d9a449a7b0c36a2e5699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 998982141}
   walkSpeed: 4
+  runSpeed: 7
+  isMoving: 0
+  isRunning: 0
 --- !u!114 &934724875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,7 +808,19 @@ MonoBehaviour:
     m_ActionId: b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba
     m_ActionName: 'Player/Next[/Keyboard/2]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 934724874}
+        m_TargetAssemblyTypeName: My2D.PlayerController, Assembly-CSharp
+        m_MethodName: OnRun
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
   - m_PersistentCalls:
