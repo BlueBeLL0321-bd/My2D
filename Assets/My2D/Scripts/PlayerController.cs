@@ -13,11 +13,16 @@ namespace My2D
         // 애니메이터
         public Animator animator;
 
+        // 그라운드, 벽 체크
+        private TouchingDirection touchingDirection;
+
         // 이동
         // 걷는 속도 - 좌우로 걷는다
         [SerializeField] private float walkSpeed = 4f;
         // 뛰는 속도 - 좌우로 뛴다
         [SerializeField] private float runSpeed = 7f;
+        // 공중 이동 속도
+        [SerializeField] private float airSpeed = 2.5f;
 
         // 이동 입력값
         private Vector2 inputMove;
@@ -30,6 +35,9 @@ namespace My2D
         // 반전
         // 캐릭터 이미지가 바라보는 방향 상태 : 오른쪽 바라보면 true
         private bool isFacingRight = true;
+
+        // 점프 키를 눌렀을 때 위로 올라가는 속도 값
+        [SerializeField] private float jumpForce = 5f;
         #endregion
 
         #region Property
@@ -59,26 +67,36 @@ namespace My2D
                 animator.SetBool(AnimationString.isRunning, value);
             }
         }
+        
 
-        // 현재 이동 속도
+        // 현재 이동 속도 세팅
         public float CurrentSpeed
         {
             get
             {
-                if (IsMoving)
+                // 인풋 값이 들어왔을 때 and 벽에 부딪히지 않을 때
+                if (IsMoving && touchingDirection.IsWall == false)
                 {
-                    if (IsRunning)
+                    if(touchingDirection.IsGround) // 땅에 있을 때
                     {
-                        return runSpeed;
+                        if (IsRunning) // 시프트를 눌렀을 때
+                        {
+                            return runSpeed;
+                        }
+                        else
+                        {
+                            return walkSpeed;
+                        }
                     }
-                    else
+                    else // 공중에 떠 있을 때
                     {
-                        return walkSpeed;
+                        return airSpeed;
                     }
+                    
                 }
                 else
                 {
-                    return 0;
+                    return 0; // idle state, 벽에 부딪히고 있는 경우
                 }
             }
         }
@@ -108,12 +126,16 @@ namespace My2D
         {
             // 참조
             rb2D = GetComponent<Rigidbody2D>();
+            touchingDirection = GetComponent<TouchingDirection>();
         }
 
         private void FixedUpdate()
         {
             // 인풋 값에 따라 플레이어 좌우 이동
-            rb2D.linearVelocity = new Vector2(inputMove.x * CurrentSpeed, rb2D.linearVelocity.y);
+            rb2D.linearVelocity = new Vector2(inputMove.x * CurrentSpeed, rb2D.linearVelocityY);
+
+            // 애니메이터 속도 값 세팅
+            animator.SetFloat(AnimationString.yVelocity, rb2D.linearVelocityY);
         }
         #endregion
 
@@ -130,13 +152,34 @@ namespace My2D
 
         public void OnRun(InputAction.CallbackContext context)
         {
-            if (context.started)
+            if (context.started) // button down
             {
                 IsRunning = true;
             }
-            else if (context.canceled)
+            else if (context.canceled) // button up
             {
                 IsRunning = false;
+            }
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (context.started && touchingDirection.IsGround) // button down
+            {
+                // 속도 연산 - 위로 이동하는 속도 값 세팅
+                rb2D.linearVelocity = new Vector2(rb2D.linearVelocityX, jumpForce);
+
+                // 애니메이션
+                animator.SetTrigger(AnimationString.jumpTrigger);
+            }
+        }
+
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            if (context.started) // button down
+            {
+                // 공격하라 애니메이션
+                animator.SetTrigger(AnimationString.attackTrigger);
             }
         }
 

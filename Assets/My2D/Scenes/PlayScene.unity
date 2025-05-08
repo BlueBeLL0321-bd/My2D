@@ -399,7 +399,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000023841858, y: -0.25, z: -10}
+  m_LocalPosition: {x: -0.00000023841858, y: -0.27999997, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -671,6 +671,7 @@ GameObject:
   - component: {fileID: 934724876}
   - component: {fileID: 934724875}
   - component: {fileID: 934724874}
+  - component: {fileID: 934724877}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -687,7 +688,7 @@ Transform:
   m_GameObject: {fileID: 934724871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.15, z: 0}
+  m_LocalPosition: {x: 0, y: -1.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -736,8 +737,10 @@ MonoBehaviour:
   animator: {fileID: 998982141}
   walkSpeed: 4
   runSpeed: 7
+  airSpeed: 2.5
   isMoving: 0
   isRunning: 0
+  jumpForce: 8
 --- !u!114 &934724875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,7 +787,19 @@ MonoBehaviour:
     m_ActionId: 6b444451-8a00-4d00-a97e-f47457f736a8
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 934724874}
+        m_TargetAssemblyTypeName: My2D.PlayerController, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
     m_ActionName: 'Player/Attack[/Mouse/leftButton,/Keyboard/enter]'
   - m_PersistentCalls:
@@ -796,7 +811,19 @@ MonoBehaviour:
     m_ActionId: 27c5f898-bc57-4ee1-8800-db469aca5fe3
     m_ActionName: 'Player/Crouch[/Keyboard/c]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 934724874}
+        m_TargetAssemblyTypeName: My2D.PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f1ba0d36-48eb-4cd5-b651-1c94a6531f70
     m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
@@ -902,9 +929,42 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.08284062, y: 0.035114884}
-  m_Size: {x: 0.66568124, y: 1.7774034}
+  m_Offset: {x: 0.012740135, y: 0.050789416}
+  m_Size: {x: 0.5254803, y: 1.746054}
   m_Direction: 0
+--- !u!114 &934724877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934724871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14f9dcd394034ec4092b50adfc8335ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 998982141}
+  groundDistance: 0.05
+  ceilingDistance: 0.05
+  wallDistance: 0.05
+  contactFilter:
+    useTriggers: 0
+    useLayerMask: 0
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  isGround: 0
+  isCeiling: 0
+  isWall: 0
 --- !u!1 &998982138
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,7 +992,7 @@ Transform:
   m_GameObject: {fileID: 998982138}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -982,12 +1042,12 @@ SpriteRenderer:
   m_SortingLayerID: 379845613
   m_SortingLayer: -2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7625406061393645561, guid: 4187ee204e3aab545a71fb55eec8d2d8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4187ee204e3aab545a71fb55eec8d2d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.3125, y: 1.9375}
+  m_Size: {x: 3.125, y: 2.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -5723,7 +5783,7 @@ Transform:
   m_GameObject: {fileID: 1685013868}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000023841858, y: -0.25, z: -10}
+  m_LocalPosition: {x: -0.00000023841858, y: -0.27999997, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5830,7 +5890,7 @@ GameObject:
   - component: {fileID: 1969568535}
   - component: {fileID: 1969568534}
   - component: {fileID: 1969568533}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MiddleGroundTilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
