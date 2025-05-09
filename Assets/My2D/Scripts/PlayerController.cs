@@ -54,6 +54,7 @@ namespace My2D
                 animator.SetBool(AnimationString.isMoving, value);
             }
         }
+
         // 런 키 입력값 - 애니메이션 파라미터 세팅
         public bool IsRunning
         {
@@ -68,12 +69,17 @@ namespace My2D
             }
         }
         
-
         // 현재 이동 속도 세팅
         public float CurrentSpeed
         {
             get
             {
+                // 공격 시 이동 제어
+                if (CannotMove)
+                {
+                    return 0f;
+                }
+
                 // 인풋 값이 들어왔을 때 and 벽에 부딪히지 않을 때
                 if (IsMoving && touchingDirection.IsWall == false)
                 {
@@ -117,6 +123,15 @@ namespace My2D
                 }
 
                 isFacingRight = value;
+            }
+        }
+
+        // 공격 시 이동 제어 값 얻어 오기
+        public bool CannotMove
+        {
+            get
+            {
+                return animator.GetBool(AnimationString.cannotMove);
             }
         }
         #endregion
@@ -164,7 +179,7 @@ namespace My2D
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.started && touchingDirection.IsGround) // button down
+            if (context.started && touchingDirection.IsGround && !CannotMove) // button down
             {
                 // 속도 연산 - 위로 이동하는 속도 값 세팅
                 rb2D.linearVelocity = new Vector2(rb2D.linearVelocityX, jumpForce);
@@ -176,7 +191,7 @@ namespace My2D
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            if (context.started) // button down
+            if (context.started && touchingDirection.IsGround) // button down
             {
                 // 공격하라 애니메이션
                 animator.SetTrigger(AnimationString.attackTrigger);

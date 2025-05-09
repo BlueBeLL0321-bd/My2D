@@ -12,7 +12,7 @@ namespace My2D
         // 캐스팅 범위
         [SerializeField] private float groundDistance = 0.05f; // 그라운드 체크 범위
         [SerializeField] private float ceilingDistance = 0.05f; // 천장 체크 범위
-        [SerializeField] private float wallDistance = 0.05f; // 벽 체크 범위
+        [SerializeField] private float wallDistance = 0.2f; // 벽 체크 범위
 
         // 캐스팅 필터 조건 설정
         [SerializeField] private ContactFilter2D contactFilter;
