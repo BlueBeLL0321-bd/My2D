@@ -33,7 +33,7 @@ namespace My2D
         private float stopRate = 0.2f;
 
         // 타깃 감지
-        [SerializeField] private bool hasTarget = false;
+        private bool hasTarget = false;
         #endregion
 
         #region Property
