@@ -19,6 +19,7 @@ namespace My2D
         private TouchingDirection touchingDirection;
         public Animator animator;
         public DetectionZone detectionZone;
+        private Damageable damageable;
 
         // 이동 속도
         [SerializeField] private float walkSpeed = 4f;
@@ -32,7 +33,7 @@ namespace My2D
         // 정지
         private float stopRate = 0.2f;
 
-        // 타깃 감지
+        // 적 감지
         private bool hasTarget = false;
         #endregion
 
@@ -84,10 +85,24 @@ namespace My2D
             }
             set
             {
-                hasTarget = true;
+                hasTarget = value;
                 animator.SetBool(AnimationString.hasTarget, value);
             }
         }
+
+        // 공격 쿨 타임 : 읽어 들여서 0보다 크면 3초 타이머를 돌려 0으로 다시 파라미터 값을 세팅
+        public float CooldownTime
+        {
+            get
+            {
+                return animator.GetFloat(AnimationString.cooldownTime);
+            }
+            set
+            {
+                animator.SetFloat(AnimationString.cooldownTime, value);
+            }
+        }
+
         #endregion
 
         #region Unity Event Method
@@ -96,12 +111,23 @@ namespace My2D
             // 참조
             rb2D = this.GetComponent<Rigidbody2D>();
             touchingDirection = this.GetComponent<TouchingDirection>();
+
+            damageable = this.GetComponent<Damageable>();
+
+            // 델리게이트 함수 등록
+            damageable.hitAction += OnHit;
         }
 
         private void Update()
         {
             // 적 감지
-            HasTarget = detectionZone.detectedColliders.Count > 0;
+            HasTarget = (detectionZone.detectedColliders.Count > 0);
+
+            // CooldownTimer
+            if(CooldownTime > 0)
+            {
+                CooldownTime -= Time.deltaTime;
+            }
         }
 
         private void FixedUpdate()
@@ -113,13 +139,16 @@ namespace My2D
             }
 
             // 좌우 이동
-            if (CannotMove)
+            if(damageable.LockVelocity == false)
             {
-                rb2D.linearVelocity = new Vector2(Mathf.Lerp(directionVector.x, 0f, stopRate), rb2D.linearVelocityY);
-            }
-            else
-            {
-                rb2D.linearVelocity = new Vector2(directionVector.x * walkSpeed, rb2D.linearVelocityY);
+                if (CannotMove)
+                {
+                    rb2D.linearVelocity = new Vector2(Mathf.Lerp(rb2D.linearVelocity.x, 0f, stopRate), rb2D.linearVelocityY);
+                }
+                else
+                {
+                    rb2D.linearVelocity = new Vector2(directionVector.x * walkSpeed, rb2D.linearVelocityY);
+                }
             }
         }
         #endregion
@@ -142,6 +171,13 @@ namespace My2D
             }
 
         }
+
+        // 대미지 입을 때 호출되는 함수 - 대미지 입을 때 속도 세팅
+        public void OnHit(float damage, Vector2 knockback)
+        {
+            rb2D.linearVelocity = new Vector2(knockback.x, rb2D.linearVelocityY + knockback.y);
+        }
+
         #endregion
     }
 }
