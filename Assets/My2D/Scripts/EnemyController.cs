@@ -20,6 +20,7 @@ namespace My2D
         public Animator animator;
         public DetectionZone detectionZone;
         private Damageable damageable;
+        public DetectionZone cliffDetection;
 
         // 이동 속도
         [SerializeField] private float walkSpeed = 4f;
@@ -116,6 +117,9 @@ namespace My2D
 
             // 델리게이트 함수 등록
             damageable.hitAction += OnHit;
+
+            // cliffDetection 이벤트 함수 등록
+            cliffDetection.noColliderRemain += Flip;
         }
 
         private void Update()

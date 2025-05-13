@@ -40,7 +40,7 @@ namespace My2D
         private bool isFacingRight = true;
 
         // 점프 키를 눌렀을 때 위로 올라가는 속도 값
-        [SerializeField] private float jumpForce = 5f;
+        [SerializeField] private float jumpForce = 12f;
         #endregion
 
         #region Property
