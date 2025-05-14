@@ -89,7 +89,7 @@ namespace My2D
         }
 
         // hp 풀 체크
-        public bool IsHealthFull => (CurrentHealth >= MaxHealth) ? true : false ;
+        public bool IsHealthFull => CurrentHealth >= MaxHealth;
         #endregion
 
         #region Unity Event Method
@@ -139,7 +139,7 @@ namespace My2D
             // 효과 : SFX, VFX, 넉백 효과, UI 효과
             // 델리게이트 함수에 등록된 함수를 호출 - 효과 연출이 필요한 함수 등록
             hitAction?.Invoke(damage, knockback);
-            Debug.Log("Damageable");
+
             // UI 효과 - 대미지 Text 생성하는 함수가 등록된 이벤트 함수 호출
             CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
             
@@ -164,16 +164,24 @@ namespace My2D
                 return false;
             }
 
+            // 힐 하기 전의 hp
+            float beforeHealth = CurrentHealth;
+
+            // 힐 하기
             CurrentHealth += healAmount;
             if (CurrentHealth > maxHealth)
             {
                 CurrentHealth = maxHealth;
             }
 
-            Debug.Log($"CurrentHealth : {CurrentHealth}");
+            // 실제 힐 값은
+            float actualHealth = CurrentHealth - beforeHealth;
+
+            // UI 효과 - 힐 text 프리팹 생성하는 함수가 등록된 이벤트 함수 호출
+            // Health Text, Health Bar 관련 호출
+            CharacterEvents.characterHealed?.Invoke(gameObject, actualHealth);
 
             return true;
-
 
         }
         #endregion

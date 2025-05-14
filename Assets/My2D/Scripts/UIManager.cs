@@ -9,6 +9,8 @@ namespace My2D
         #region Variables
         // 대미지 텍스트 프리팹
         public GameObject damageTextPrefab;
+        // 힐 텍스트 프리팹
+        public GameObject healTextPrefab;
         
         // 캔버스
         public Canvas gameCanvas;
@@ -28,17 +30,19 @@ namespace My2D
         {
             // 이벤트 함수에 함수 등록
             CharacterEvents.characterDamaged += CharacterTakeDamage;
+            CharacterEvents.characterHealed += CharacterHeal;
         }
 
         private void OnDisable()
         {
             // 이벤트 함수에 등록된 함수 제거
             CharacterEvents.characterDamaged -= CharacterTakeDamage;
+            CharacterEvents.characterHealed -= CharacterHeal;
         }
         #endregion
 
         #region Custom Method
-        // 대미지 텍스트 프리팹 생성, character 대미지를 입는 캐릭터
+        // 대미지 텍스트 프리팹 생성, character : 대미지를 입는 캐릭터
         public void CharacterTakeDamage(GameObject character, float damage)
         {
             // 프리팹 생성 : 생성된 프리팹의 부모를 Canvas로 지정
@@ -56,12 +60,22 @@ namespace My2D
             }
         }
 
-        // 힐 텍스트 프리팹 생성, character 힐한 캐릭터
+        // 힐 텍스트 프리팹 생성, character : 힐한 캐릭터
         public void CharacterHeal(GameObject character, float healAmount)
         {
             // 프리팹 생성 : 생성된 프리팹의 부모를 Canvas로 지정
             // 텍스트에 매개 변수로 들어온 힐량 세팅
+            Vector3 spawnPosition = camera.WorldToScreenPoint(character.transform.position);
 
+            GameObject textGo = Instantiate(healTextPrefab, spawnPosition + offset, Quaternion.identity, gameCanvas.transform);
+
+            // 텍스트 객체
+            TextMeshProUGUI healText = textGo.GetComponent<TextMeshProUGUI>();
+
+            if (healText)
+            {
+                healText.text = healAmount.ToString();
+            }
         }
         #endregion
     }

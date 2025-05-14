@@ -211,10 +211,19 @@ namespace My2D
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            if (context.started && touchingDirection.IsGround) // button down
+            if (context.started && touchingDirection.IsGround) // mouse left button down
             {
                 // 공격하라 애니메이션
                 animator.SetTrigger(AnimationString.attackTrigger);
+            }
+        }
+
+        public void OnBowAttack(InputAction.CallbackContext context)
+        {
+            if (context.started && touchingDirection.IsGround) // F key down
+            {
+                // 활을 쏴라 애니메이션
+                animator.SetTrigger(AnimationString.bowAttackTrigger);
             }
         }
 

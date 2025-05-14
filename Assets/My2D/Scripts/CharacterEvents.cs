@@ -8,6 +8,7 @@ namespace My2D
     {
         // 캐릭터 대미지 이벤트 함수 정의
         public static UnityAction<GameObject, float> characterDamaged;
-        // 
+        // 힐 이벤트 함수 정의
+        public static UnityAction<GameObject, float> characterHealed;
     }
 }

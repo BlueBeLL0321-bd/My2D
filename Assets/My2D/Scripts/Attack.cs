@@ -12,7 +12,7 @@ namespace My2D
 
         // 넉백 효과 - 뒤로 이동
         [SerializeField]
-        public Vector2 knockback = Vector2.zero;
+        private Vector2 knockback = Vector2.zero;
         #endregion
 
 
@@ -28,11 +28,6 @@ namespace My2D
                Vector2 deliveredKnockback = this.transform.parent.parent.localScale.x > 0 ? knockback : new Vector2(-knockback.x, knockback.y);
 
                bool isHit = damageable.TakeDamage(attackDamage, deliveredKnockback);
-
-               if (isHit)
-               {
-                   Debug.Log(collision.name + " hit for " + attackDamage);
-               }
             }
         }
         #endregion
